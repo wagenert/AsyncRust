@@ -1,7 +1,9 @@
+use async_std::prelude::*;
 use chrono::prelude::*;
 use clap::Parser;
 use std::io::{Error, ErrorKind};
 use yahoo_finance_api as yahoo;
+
 
 #[derive(Parser, Debug)]
 #[clap(
@@ -118,7 +120,8 @@ fn fetch_closing_data(
     }
 }
 
-fn main() -> std::io::Result<()> {
+#[async_std::main]
+async fn main() -> std::io::Result<()> {
     let opts = Opts::parse();
     let from: DateTime<Utc> = opts.from.parse().expect("Couldn't parse 'from' date");
     let to = Utc::now();
