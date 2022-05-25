@@ -38,6 +38,48 @@ trait AsyncStockSignal {
     fn calculate(&self, series: &[f64]) -> Option<Self::SignalType>;
 }
 
+struct PriceDifference;
+
+impl AsyncStockSignal for PriceDifference {
+    type SignalType;
+
+    fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
+        todo!()
+    }
+}
+
+struct MinPrice;
+
+impl AsyncStockSignal for MinPrice {
+    type SignalType;
+
+    fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
+        todo!()
+    }
+}
+
+struct MaxPrice;
+
+impl AsyncStockSignal for MaxPrice {
+    type SignalType;
+
+    fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
+        todo!()
+    }
+}
+
+struct WindowedSMA {
+    window_size: u16,
+}
+
+impl AsyncStockSignal for WindowedSMA {
+    type SignalType;
+
+    fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
+        todo!()
+    }
+}
+
 ///
 /// Calculates the absolute and relative difference between the beginning and ending of an f64 series. The relative difference is relative to the beginning.
 ///
@@ -99,7 +141,7 @@ fn min(series: &[f64]) -> Option<f64> {
 ///
 /// Retrieve data from a data source and extract the closing prices. Errors during download are mapped onto io::Errors as InvalidData.
 ///
-fn fetch_closing_data(
+async fn fetch_closing_data(
     symbol: &str,
     beginning: &DateTime<Utc>,
     end: &DateTime<Utc>,
@@ -108,6 +150,7 @@ fn fetch_closing_data(
 
     let response = provider
         .get_quote_history(symbol, *beginning, *end)
+        .await
         .map_err(|_| Error::from(ErrorKind::InvalidData))?;
     let mut quotes = response
         .quotes()
@@ -129,7 +172,7 @@ async fn main() -> std::io::Result<()> {
     // a simple way to output a CSV header
     println!("period start,symbol,price,change %,min,max,30d avg");
     for symbol in opts.symbols.split(',') {
-        let closes = fetch_closing_data(&symbol, &from, &to)?;
+        let closes = fetch_closing_data(&symbol, &from, &to).await?;
         if !closes.is_empty() {
                 // min/max of the period. unwrap() because those are Option types
                 let period_max: f64 = max(&closes).unwrap();
