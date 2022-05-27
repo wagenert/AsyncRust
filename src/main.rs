@@ -41,42 +41,42 @@ trait AsyncStockSignal {
 struct PriceDifference;
 
 impl AsyncStockSignal for PriceDifference {
-    type SignalType;
+    type SignalType = (f64, f64);
 
     fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
-        todo!()
+        price_diff(series)
     }
 }
 
 struct MinPrice;
 
 impl AsyncStockSignal for MinPrice {
-    type SignalType;
+    type SignalType = f64;
 
     fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
-        todo!()
+        min(series)
     }
 }
 
 struct MaxPrice;
 
 impl AsyncStockSignal for MaxPrice {
-    type SignalType;
+    type SignalType = f64;
 
     fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
-        todo!()
+        max(series)
     }
 }
 
 struct WindowedSMA {
-    window_size: u16,
+    window_size: usize,
 }
 
 impl AsyncStockSignal for WindowedSMA {
-    type SignalType;
+    type SignalType = Vec<f64>;
 
     fn calculate(&self, series: &[f64]) -> Option<Self::SignalType> {
-        todo!()
+        n_window_sma(self.window_size, series)
     }
 }
 
