@@ -1,14 +1,14 @@
 use chrono::{DateTime, Utc};
 
 pub struct StockServiceResponse {
-    symbol: String,
-    from: DateTime<Utc>,
-    to: DateTime<Utc>,
-    max: f64,
-    min: f64,
-    diff: f64,
-    last: f64,
-    sma: Vec<f64>,
+    pub symbol: String,
+    pub from: DateTime<Utc>,
+    pub to: DateTime<Utc>,
+    pub max: f64,
+    pub min: f64,
+    pub diff: f64,
+    pub last: f64,
+    pub sma: Vec<f64>,
 }
 
 impl StockServiceResponse {
