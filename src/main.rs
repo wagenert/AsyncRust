@@ -34,16 +34,7 @@ async fn main() -> std::io::Result<()> {
     println!("period start,symbol,price,change %,min,max,30d avg");
     for symbol in opts.symbols.split(',') {
         if let Some(service_response) = yahoo_stock_service.fetch_stock_quotes_for_symbol(symbol, &from, &to).await {
-            println!(
-                "{},{},${:.2},{:.2}%,${:.2},${:.2},${:.2}",
-                service_response.from.to_rfc3339(),
-                service_response.symbol,
-                service_response.last,
-                service_response.diff * 100.0,
-                service_response.min,
-                service_response.max,
-                service_response.sma.last().unwrap_or(&0.0)
-            );
+            println!("{}", service_response);
         }
     }
     Ok(())

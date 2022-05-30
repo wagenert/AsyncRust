@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use chrono::{DateTime, Utc};
 
 pub struct StockServiceResponse {
@@ -32,5 +34,20 @@ impl StockServiceResponse {
             last: last_price,
             sma: sma,
         }
+    }
+}
+
+impl Display for StockServiceResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, 
+            "{},{},${:.2},{:.2}%,${:.2},${:.2},${:.2}",
+            self.from.to_rfc3339(),
+            self.symbol,
+            self.last,
+            self.diff * 100.0,
+            self.min,
+            self.max,
+            self.sma.last().unwrap_or(&0.0)
+        )
     }
 }
