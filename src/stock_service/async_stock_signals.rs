@@ -57,7 +57,7 @@ impl AsyncStockSignal for MaxPrice {
 }
 
 pub(crate) struct WindowedSMA {
-    window_size: usize,
+    pub window_size: usize,
 }
 
 #[async_trait]
