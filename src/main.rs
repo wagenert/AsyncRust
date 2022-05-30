@@ -59,7 +59,7 @@ async fn main() -> std::io::Result<()> {
     // a simple way to output a CSV header
     println!("period start,symbol,price,change %,min,max,30d avg");
     for symbol in opts.symbols.split(',') {
-        if let Some(service_response) = yahoo_stock_service.fetch_stock_quotes_for_symbol(symbol, from, to).await {
+        if let Some(service_response) = yahoo_stock_service.fetch_stock_quotes_for_symbol(symbol, &from, &to).await {
             println!(
                 "{},{},${:.2},{:.2}%,${:.2},${:.2},${:.2}",
                 service_response.from.to_rfc3339(),
