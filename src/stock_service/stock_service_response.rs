@@ -30,7 +30,7 @@ impl StockServiceResponse {
             min: min_price,
             diff: price_diff,
             last: last_price,
-            sma: Vec::new(),
+            sma: sma,
         }
     }
 }

@@ -45,7 +45,7 @@ impl YahooStockService {
                     .unwrap_or((0.0, 0.0));
                 let sma = self.sma.calculate(&closes).await.unwrap_or_default();
                 return Some(StockServiceResponse::new(
-                    symbol, *from, *to, period_max, period_min, last_price, pct_change, sma,
+                    symbol, *from, *to, period_max, period_min, pct_change, last_price, sma,
                 ));
             } else {
                 return None;
@@ -64,9 +64,9 @@ impl YahooStockService {
         beginning: &DateTime<Utc>,
         end: &DateTime<Utc>,
     ) -> std::io::Result<Vec<f64>> {
-        let provider = yahoo::YahooConnector::new();
+        //let provider = yahoo::YahooConnector::new();
 
-        let response = provider
+        let response = self.connection
             .get_quote_history(symbol, *beginning, *end)
             .await
             .map_err(|_| Error::from(ErrorKind::InvalidData))?;
