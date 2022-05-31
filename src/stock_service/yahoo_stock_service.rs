@@ -64,7 +64,6 @@ impl YahooStockService {
         beginning: &DateTime<Utc>,
         end: &DateTime<Utc>,
     ) -> std::io::Result<Vec<f64>> {
-        //let provider = yahoo::YahooConnector::new();
 
         let response = self.connection
             .get_quote_history(symbol, *beginning, *end)
