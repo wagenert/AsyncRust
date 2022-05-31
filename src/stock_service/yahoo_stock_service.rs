@@ -8,7 +8,6 @@ use crate::stock_service::async_stock_signals::{MaxPrice, MinPrice, PriceDiffere
 use super::{async_stock_signals::AsyncStockSignal, stock_service::StockServiceResponse};
 
 pub(crate) struct YahooStockService {
-    connection: yahoo::YahooConnector,
     max: MaxPrice,
     min: MinPrice,
     price_diff: PriceDifference,
@@ -18,7 +17,6 @@ pub(crate) struct YahooStockService {
 impl YahooStockService {
     pub fn new() -> Self {
         YahooStockService {
-            connection: yahoo::YahooConnector::new(),
             max: MaxPrice {},
             min: MinPrice {},
             price_diff: PriceDifference {},
@@ -64,8 +62,8 @@ impl YahooStockService {
         beginning: &DateTime<Utc>,
         end: &DateTime<Utc>,
     ) -> std::io::Result<Vec<f64>> {
-
-        let response = self.connection
+        let connection = yahoo::YahooConnector::new();
+        let response = connection
             .get_quote_history(symbol, *beginning, *end)
             .await
             .map_err(|_| Error::from(ErrorKind::InvalidData))?;
