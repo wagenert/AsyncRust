@@ -7,7 +7,7 @@ use futures::stream::FuturesUnordered;
 
 
 
-use crate::stock_service::yahoo_stock_service as yahoo_stock_service;
+use crate::stock_service::{yahoo_stock_service as yahoo_stock_service, stock_service::StockService};
 
 
 #[derive(Parser, Debug)]

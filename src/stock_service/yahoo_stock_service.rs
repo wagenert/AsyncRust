@@ -1,11 +1,12 @@
 use std::io::{Error, ErrorKind};
 
+use async_trait::async_trait;
 use chrono::{DateTime, Utc};
 use yahoo_finance_api as yahoo;
 
 use crate::stock_service::async_stock_signals::{MaxPrice, MinPrice, PriceDifference, WindowedSMA};
 
-use super::{async_stock_signals::AsyncStockSignal, stock_service::StockServiceResponse};
+use super::{async_stock_signals::AsyncStockSignal, stock_service::{StockServiceResponse, StockService}};
 
 pub(crate) struct YahooStockService {
     max: MaxPrice,
@@ -14,17 +15,9 @@ pub(crate) struct YahooStockService {
     sma: WindowedSMA,
 }
 
-impl YahooStockService {
-    pub fn new() -> Self {
-        YahooStockService {
-            max: MaxPrice {},
-            min: MinPrice {},
-            price_diff: PriceDifference {},
-            sma: WindowedSMA { window_size: 30 },
-        }
-    }
-
-    pub async fn fetch_stock_quotes_for_symbol(
+#[async_trait]
+impl StockService for YahooStockService {
+    async fn fetch_stock_quotes_for_symbol(
         &self,
         symbol: &str,
         from: &DateTime<Utc>,
@@ -50,6 +43,17 @@ impl YahooStockService {
             }
         } else {
             return None;
+        }
+    }
+}
+
+impl YahooStockService {
+    pub fn new() -> Self {
+        YahooStockService {
+            max: MaxPrice {},
+            min: MinPrice {},
+            price_diff: PriceDifference {},
+            sma: WindowedSMA { window_size: 30 },
         }
     }
 
