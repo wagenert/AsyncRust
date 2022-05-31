@@ -12,7 +12,7 @@ use crate::stock_service::yahoo_stock_service as yahoo_stock_service;
 
 #[derive(Parser, Debug)]
 #[clap(
-    version = "1.0",
+    version = "1.2",
     author = "Claus Matzinger",
     about = "A Manning LiveProject: async Rust"
 )]
