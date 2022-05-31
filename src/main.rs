@@ -3,6 +3,7 @@ mod stock_service;
 use async_std::prelude::*;
 use chrono::prelude::*;
 use clap::Parser;
+use futures::stream::FuturesUnordered;
 
 
 
@@ -32,10 +33,15 @@ async fn main() -> std::io::Result<()> {
 
     // a simple way to output a CSV header
     println!("period start,symbol,price,change %,min,max,30d avg");
+    let mut futures = FuturesUnordered::new();
     for symbol in opts.symbols.split(',') {
-        if let Some(service_response) = yahoo_stock_service.fetch_stock_quotes_for_symbol(symbol, &from, &to).await {
+        let future = yahoo_stock_service.fetch_stock_quotes_for_symbol(symbol, &from, &to);
+        futures.push(future);
+    }
+    while let Some(response_option) = futures.next().await {
+        if let Some(service_response) = response_option {
             println!("{}", service_response);
-        }
+        }        
     }
     Ok(())
 }
