@@ -5,7 +5,7 @@ use yahoo_finance_api as yahoo;
 
 use crate::stock_service::async_stock_signals::{MaxPrice, MinPrice, PriceDifference, WindowedSMA};
 
-use super::{async_stock_signals::AsyncStockSignal, stock_service_response::StockServiceResponse};
+use super::{async_stock_signals::AsyncStockSignal, stock_service::StockServiceResponse};
 
 pub(crate) struct YahooStockService {
     connection: yahoo::YahooConnector,
