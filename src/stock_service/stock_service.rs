@@ -1,6 +1,17 @@
 use std::fmt::Display;
 
+use async_trait::async_trait;
 use chrono::{DateTime, Utc};
+
+#[async_trait]
+pub trait StockService {
+    async fn fetch_stock_quotes_for_symbol(
+        &self,
+        symbol: &str,
+        from: &DateTime<Utc>,
+        to: &DateTime<Utc>,
+    ) -> Option<StockServiceResponse>;
+}
 
 pub struct StockServiceResponse {
     pub symbol: String,
