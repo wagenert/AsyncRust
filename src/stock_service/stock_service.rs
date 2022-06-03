@@ -10,10 +10,21 @@ pub trait StockService {
         symbol: &str,
         from: &DateTime<Utc>,
         to: &DateTime<Utc>,
-    ) -> Option<StockServiceResponse>;
+    ) -> Option<TickerData>;
 }
 
-pub struct StockServiceResponse {
+#[async_trait]
+pub trait StockQuote {
+    async fn fetch_stock_quotes(
+        &mut self
+    );
+
+    async fn update_stock_quotes(
+        &mut self
+    );
+}
+
+pub struct TickerData {
     pub symbol: String,
     pub from: DateTime<Utc>,
     pub to: DateTime<Utc>,
@@ -22,9 +33,10 @@ pub struct StockServiceResponse {
     pub diff: f64,
     pub last: f64,
     pub sma: Vec<f64>,
+    last_update: Option<u64>,
 }
 
-impl StockServiceResponse {
+impl TickerData {
     pub fn new(
         symbol: &str,
         from_date: DateTime<Utc>,
@@ -33,9 +45,10 @@ impl StockServiceResponse {
         min_price: f64,
         price_diff: f64,
         last_price: f64,
-        sma: Vec<f64>
+        sma: Vec<f64>,
+        last_update: u64
     ) -> Self {
-        StockServiceResponse {
+        TickerData {
             symbol: symbol.to_string(),
             from: from_date,
             to: to_date,
@@ -44,11 +57,12 @@ impl StockServiceResponse {
             diff: price_diff,
             last: last_price,
             sma: sma,
+            last_update: Some(last_update),
         }
     }
 }
 
-impl Display for StockServiceResponse {
+impl Display for TickerData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, 
             "{},{},${:.2},{:.2}%,${:.2},${:.2},${:.2}",

@@ -6,7 +6,7 @@ use yahoo_finance_api as yahoo;
 
 use crate::stock_service::async_stock_signals::{MaxPrice, MinPrice, PriceDifference, WindowedSMA};
 
-use super::{async_stock_signals::AsyncStockSignal, stock_service::{StockServiceResponse, StockService}};
+use super::{async_stock_signals::AsyncStockSignal, stock_service::{TickerData, StockService}};
 
 pub(crate) struct YahooStockService {
     max: MaxPrice,
@@ -22,7 +22,7 @@ impl StockService for YahooStockService {
         symbol: &str,
         from: &DateTime<Utc>,
         to: &DateTime<Utc>,
-    ) -> Option<StockServiceResponse> {
+    ) -> Option<TickerData> {
         if let Ok(closes) = self.fetch_closing_data(&symbol, &from, &to).await {
             if !closes.is_empty() {
                 // min/max of the period. unwrap() because those are Option types
@@ -35,8 +35,8 @@ impl StockService for YahooStockService {
                     .await
                     .unwrap_or((0.0, 0.0));
                 let sma = self.sma.calculate(&closes).await.unwrap_or_default();
-                return Some(StockServiceResponse::new(
-                    symbol, *from, *to, period_max, period_min, pct_change, last_price, sma,
+                return Some(TickerData::new(
+                    symbol, *from, *to, period_max, period_min, pct_change, last_price, sma, 0
                 ));
             } else {
                 return None;
